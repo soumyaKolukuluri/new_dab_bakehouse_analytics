@@ -20,28 +20,17 @@ resources:
           default: ${var.catalog}
         - name: schema
           default: ${var.schema}
-
       tasks:
-        - task_key: notebook_task
+        - task_key: customer_360
           notebook_task:
             notebook_path: ../src/new_customer_360.ipynb
-        - task_key: python_wheel_task
+        
+        - task_key: transactions_summary
           depends_on:
-            - task_key: notebook_task
-          python_wheel_task:
-            package_name: new_bakehouse_analytics
-            entry_point: main
-            parameters:
-              - "--catalog"
-              - "${var.catalog}"
-              - "--schema"
-              - "${var.schema}"
-          environment_key: default
-        - task_key: refresh_pipeline
-          depends_on:
-            - task_key: notebook_task
-          pipeline_task:
-            pipeline_id: ${resources.pipelines.new_bakehouse_analytics_etl.id}
+            - task_key: customer_360
+          notebook_task:
+            notebook_path: ../src/transactions_summary.ipynb
+            
 
       environments:
         - environment_key: default
